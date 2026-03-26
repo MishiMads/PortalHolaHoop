@@ -97,3 +97,7 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Ignore Supercyan sample assets and its folder meta file
+/[Aa]ssets/Supercyan Free Forest Sample/
+/[Aa]ssets/Supercyan Free Forest Sample.meta
