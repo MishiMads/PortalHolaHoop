@@ -7,11 +7,15 @@ TagManager:
   - Anchor
   - Portal
   - ActivePortal
+  - Handle
+  - Grabbable
+  - Target
+  - Floor
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Overlay UI
   - Water
   - UI
   - 

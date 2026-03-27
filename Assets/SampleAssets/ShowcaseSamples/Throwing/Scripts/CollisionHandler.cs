@@ -1,5 +1,3 @@
-// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
-
 using System.Collections;
 using Meta.XR.Samples;
 using UnityEngine;
@@ -7,58 +5,54 @@ using Random = UnityEngine.Random;
 
 namespace Meta.XR.InteractionSDK.Samples
 {
-    [MetaCodeSample("ISDK-Throwing")]
     [RequireComponent(typeof(AudioSource))]
     public class CollisionHandler : MonoBehaviour
     {
+        [Header("Audio Settings")]
         [SerializeField] private AudioClip[] _bounceAudio;
-        [SerializeField] private AudioSource _winAudioSource;
+        [SerializeField] private AudioClip _winClip;
+
+        [Header("Portal Settings")]
+        [SerializeField] private GameObject _portalPrefab;
         [SerializeField] private bool _toFreezeOnHit;
 
-        private ScoreManager _scoreManager;
-        private AudioSource _bounceAudioSource;
+        private AudioSource _audioSource;
         private PooledThrowable _pooledThrowable;
 
         private void Awake()
         {
-            _bounceAudioSource = GetComponent<AudioSource>();
-            _bounceAudioSource.playOnAwake = false;
-            _bounceAudioSource.volume = 0.4f;
+            _audioSource = GetComponent<AudioSource>();
+            _audioSource.playOnAwake = false;
             _pooledThrowable = GetComponent<PooledThrowable>();
-        }
-
-        private void Start()
-        {
-            _scoreManager = FindObjectOfType<ScoreManager>();
-
-            if (_winAudioSource == null)
-            {
-                _winAudioSource = _scoreManager.GetComponent<AudioSource>();
-            }
         }
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.CompareTag("Bouncable"))
+            // 1. Check for bouncing on walls/floor
+            if (collision.gameObject.CompareTag("Bouncable") || collision.gameObject.CompareTag("Floor"))
             {
                 PlayRandomBounceSound();
+                SpawnPortal(collision.contacts[0].point);
             }
+            // 2. Check for hitting the Goal/Target
             else if (collision.gameObject.CompareTag("Target"))
             {
+                PlayWinSound();
 
-
-                if (collision.GetContact(0).thisCollider.CompareTag("Handle"))
-                    return;
-
-                HitTarget(collision.gameObject, collision);
+                if (_toFreezeOnHit)
+                {
+                    HitTarget(collision.gameObject);
+                }
             }
         }
 
-        private void OnTriggerEnter(Collider other)
+        private void SpawnPortal(Vector3 position)
         {
-            if (other.gameObject.CompareTag("Target"))
+            if (_portalPrefab != null)
             {
-                HitTarget(other.gameObject);
+                GameObject portal = Instantiate(_portalPrefab, position, Quaternion.identity);
+                var teleporter = FindObjectOfType<PortalTeleporter>();
+                if (teleporter != null) teleporter.SetPortalLocation(portal);
             }
         }
 
@@ -67,39 +61,26 @@ namespace Meta.XR.InteractionSDK.Samples
             if (_bounceAudio != null && _bounceAudio.Length > 0)
             {
                 AudioClip clip = _bounceAudio[Random.Range(0, _bounceAudio.Length)];
-                if (clip != null)
-                {
-                    _bounceAudioSource.PlayOneShot(clip);
-                }
+                _audioSource.PlayOneShot(clip, 0.4f);
             }
         }
 
-        private void HitTarget(GameObject targetObject, Collision collision = null)
+        private void PlayWinSound()
         {
-            if (_winAudioSource != null)
+            if (_winClip != null)
             {
-                _winAudioSource.Play();
-                _scoreManager.AddScore(transform.position);
-            }
-
-            if (_toFreezeOnHit)
-            {
-                if (TryGetComponent<Rigidbody>(out var rb))
-                {
-                    rb.isKinematic = true;
-                }
-
-                transform.SetParent(targetObject.transform, true);
-
-                StartCoroutine(ReturnToPool());
+                _audioSource.PlayOneShot(_winClip, 1.0f);
+                Debug.Log("Goal Reached! Playing Win Sound.");
             }
         }
 
-        private IEnumerator ReturnToPool()
+        private void HitTarget(GameObject targetObject)
         {
-            yield return new WaitForSeconds(2f);
-            transform.SetParent(null);
-            _pooledThrowable.Despawn();
+            if (TryGetComponent<Rigidbody>(out var rb))
+            {
+                rb.isKinematic = true;
+            }
+            transform.SetParent(targetObject.transform, true);
         }
     }
 }

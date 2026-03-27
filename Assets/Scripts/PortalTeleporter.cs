@@ -1,73 +1,61 @@
 using UnityEngine;
 using System.Collections;
-using Oculus.Interaction;
 
 public class PortalTeleporter : MonoBehaviour
 {
     [Header("Settings")]
-    public float dashDuration = 0.5f;
-    public string portalTag = "ActivePortal";
-    public Transform playerRig;
-    public float minDistanceToTeleport = 1.5f; // Won't teleport if closer than this
+    public Transform playerTransform;
+    public float transitionDuration = 0.5f;
+    public float minDistanceToTeleport = 1.5f; // Distance in meters
+    public AnimationCurve easeCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-    [Header("Gesture Settings")]
-    public ActiveStateGroup fistActiveState;
+    private GameObject activePortal;
 
-    private bool _isCharging = false;
-    private bool _isTeleporting = false;
-
-    void Update()
+    // Called when the frisbee lands and spawns a portal
+    public void SetPortalLocation(GameObject portal)
     {
-        GameObject portal = GameObject.FindWithTag(portalTag);
-        if (portal == null) return;
+        activePortal = portal;
+    }
 
-        // Calculate distance between your hand and the frisbee
-        float dist = Vector3.Distance(transform.position, portal.transform.position);
+    // Triggered by your Palm-Fist-Palm Sequence
+    public void OnGestureComplete()
+    {
+        // 1. Check if a portal even exists
+        if (activePortal == null) return;
 
-        // 1. Detect the "Grab": Only charge if we are FAR from the frisbee
-        if (fistActiveState != null && fistActiveState.Active && !_isTeleporting)
+        // 2. Calculate distance between player and portal
+        float distance = Vector3.Distance(playerTransform.position, activePortal.transform.position);
+
+        // 3. Only teleport if the player is far enough away
+        if (distance >= minDistanceToTeleport)
         {
-            if (dist > minDistanceToTeleport)
-            {
-                _isCharging = true;
-            }
+            StartCoroutine(SmoothTeleport(activePortal.transform.position));
         }
-
-        // 2. Detect the "Release": Fire if we were charged
-        if (_isCharging && !fistActiveState.Active && !_isTeleporting)
+        else
         {
-            _isCharging = false;
-            InitiateTeleport(portal.transform.position);
-        }
-
-        // Safety: If you walk up to the frisbee while "charged", cancel the charge
-        if (_isCharging && dist < (minDistanceToTeleport - 0.5f))
-        {
-            _isCharging = false;
+            Debug.Log("Too close to portal to teleport!");
         }
     }
 
-    public void InitiateTeleport(Vector3 targetPos)
+    IEnumerator SmoothTeleport(Vector3 targetPosition)
     {
-        StartCoroutine(EaseInDash(targetPos));
-    }
+        Vector3 startPosition = playerTransform.position;
+        float elapsed = 0f;
 
-    private IEnumerator EaseInDash(Vector3 targetPos)
-    {
-        _isTeleporting = true;
-        Vector3 startPos = playerRig.position;
-        float elapsed = 0;
-
-        while (elapsed < dashDuration)
+        while (elapsed < transitionDuration)
         {
             elapsed += Time.deltaTime;
-            float percent = elapsed / dashDuration;
-            float easeIn = percent * percent;
-            playerRig.position = Vector3.Lerp(startPos, targetPos, easeIn);
+            float percent = elapsed / transitionDuration;
+            float curvedPercent = easeCurve.Evaluate(percent);
+
+            playerTransform.position = Vector3.Lerp(startPosition, targetPosition, curvedPercent);
             yield return null;
         }
 
-        playerRig.position = targetPos;
-        _isTeleporting = false;
+        playerTransform.position = targetPosition;
+
+        // Clean up portal after successful move
+        Destroy(activePortal);
+        activePortal = null;
     }
 }
