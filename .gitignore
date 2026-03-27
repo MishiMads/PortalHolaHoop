@@ -101,3 +101,7 @@ InitTestScene*.unity*
 # Ignore Supercyan sample assets and its folder meta file
 /[Aa]ssets/Supercyan Free Forest Sample/
 /[Aa]ssets/Supercyan Free Forest Sample.meta
+
+# Ignore MetaAssets folder and its meta file
+/[Aa]ssets/MetaAssets/
+/[Aa]ssets/MetaAssets.meta
