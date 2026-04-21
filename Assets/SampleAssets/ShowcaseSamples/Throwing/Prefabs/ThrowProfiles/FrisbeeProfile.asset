@@ -23,8 +23,8 @@ MonoBehaviour:
   _forwardLerpSpeed: 15
   _enableBuiltIns: 1
   _gravityScale: 0.4
-  _localConstantForce: {x: 0, y: 0.5, z: 0}
+  _localConstantForce: {x: 0, y: 0, z: 0}
   _localConstantTorque: {x: 0, y: 0, z: 0}
   _localVelocityDamping: {x: 0, y: 0, z: 0}
-  _linearDrag: 0.005
-  _angularDrag: 0.05
+  _linearDrag: 1
+  _angularDrag: 2
