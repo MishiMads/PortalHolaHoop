@@ -357,7 +357,7 @@ GameObject:
   - component: {fileID: 83854478}
   m_Layer: 0
   m_Name: Terrain_(52.62, 0.26, -12.13)
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -715,7 +715,7 @@ GameObject:
   - component: {fileID: 172129243}
   m_Layer: 0
   m_Name: Terrain_(52.62, 0.26, 62.87)
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1743,11 +1743,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5587586220568430485, guid: fc71d63d22e006f4289d9411a8d4210c, type: 3}
       propertyPath: m_LinearDamping
-      value: 0.5
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5587586220568430485, guid: fc71d63d22e006f4289d9411a8d4210c, type: 3}
       propertyPath: m_AngularDamping
-      value: 0.1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5587586220568430485, guid: fc71d63d22e006f4289d9411a8d4210c, type: 3}
       propertyPath: m_CollisionDetection
@@ -1846,6 +1846,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8970106232748975577, guid: fc71d63d22e006f4289d9411a8d4210c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 427929368}
+    - targetCorrespondingSourceObject: {fileID: 8970106232748975577, guid: fc71d63d22e006f4289d9411a8d4210c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 427929369}
   m_SourcePrefab: {fileID: 100100000, guid: fc71d63d22e006f4289d9411a8d4210c, type: 3}
 --- !u!1 &427929342 stripped
 GameObject:
@@ -1959,6 +1962,39 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &427929369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 427929342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0877e98bd8d606041977ad188f63e861, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FrisbeeGroundStop
+  rb: {fileID: 427929379}
+  throwTuner: {fileID: 427929370}
+  groundDampingFactor: 0.95
+  angularDampingFactor: 0.9
+  stopThreshold: 0.3
+--- !u!114 &427929370 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1079659362762612064, guid: fc71d63d22e006f4289d9411a8d4210c, type: 3}
+  m_PrefabInstance: {fileID: 427929341}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 427929342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6615de1c333738747abf98f31352e604, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!54 &427929379 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 5587586220568430485, guid: fc71d63d22e006f4289d9411a8d4210c, type: 3}
+  m_PrefabInstance: {fileID: 427929341}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &531919275
 GameObject:
   m_ObjectHideFlags: 0
@@ -2100,7 +2136,7 @@ GameObject:
   - component: {fileID: 588031154}
   m_Layer: 0
   m_Name: Terrain_(-97.38, 0.26, -87.13)
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -2193,7 +2229,7 @@ GameObject:
   - component: {fileID: 625522456}
   m_Layer: 0
   m_Name: Terrain_(-22.38, 0.26, 62.87)
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -2798,7 +2834,7 @@ GameObject:
   - component: {fileID: 973702274}
   m_Layer: 0
   m_Name: Terrain_(-97.38, 0.26, -12.13)
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -2922,7 +2958,7 @@ GameObject:
   - component: {fileID: 1008837915}
   m_Layer: 0
   m_Name: Terrain_(-97.38, 0.26, 62.87)
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -3306,7 +3342,7 @@ GameObject:
   - component: {fileID: 1125933001}
   m_Layer: 0
   m_Name: Terrain_(-22.38, 0.26, -87.13)
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -5348,7 +5384,7 @@ GameObject:
   - component: {fileID: 1914977221}
   m_Layer: 0
   m_Name: Terrain_(52.62, 0.26, -87.13)
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -5543,6 +5579,7 @@ GameObject:
   - component: {fileID: 2092139009}
   - component: {fileID: 2092139008}
   - component: {fileID: 2092139011}
+  - component: {fileID: 2092139012}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -5635,6 +5672,23 @@ MonoBehaviour:
   playerTransform: {fileID: 1717651815}
   sampleInterval: 0.5
   fileName: PlayerHeatmap
+--- !u!114 &2092139012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2092139007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc82c6cab36e4e699ed8cd43554a829f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PerformanceRecorder
+  sampleInterval: 1
+  fileName: PerformanceStats
+  recordFPS: 1
+  recordFrameTime: 1
+  recordMemory: 1
 --- !u!1 &2092706353
 GameObject:
   m_ObjectHideFlags: 0

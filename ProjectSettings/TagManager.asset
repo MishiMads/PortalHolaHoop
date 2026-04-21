@@ -12,6 +12,18 @@ TagManager:
   - Target
   - Floor
   - Bouncable
+  - Backboard
+  - QDSUIToggleButton
+  - QDSUIToggleSwitch
+  - QDSUITooltip
+  - QDSUISharedThemeColor
+  - QDSUIAccentColor
+  - QDSUIBorderlessButton
+  - QDSUISecondaryButton
+  - QDSUIToggleBorderlessButton
+  - QDSUIIcon
+  - QDSUITextSecondaryColor
+  - Ground
   layers:
   - Default
   - TransparentFX
