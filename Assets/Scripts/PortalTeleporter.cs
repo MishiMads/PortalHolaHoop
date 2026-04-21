@@ -14,26 +14,36 @@ public class PortalTeleporter : MonoBehaviour
     // Called when the frisbee lands and spawns a portal
     public void SetPortalLocation(GameObject portal)
     {
+        if (activePortal != null)
+        {
+            Debug.Log("[PortalTeleporter] Replacing existing portal with new one.");
+            Destroy(activePortal);
+        }
+
         activePortal = portal;
+        Debug.Log($"[PortalTeleporter] New portal registered at {portal.transform.position}");
     }
 
     // Triggered by your Palm-Fist-Palm Sequence
     public void OnGestureComplete()
     {
-        // 1. Check if a portal even exists
-        if (activePortal == null) return;
+        if (activePortal == null)
+        {
+            Debug.Log("[PortalTeleporter] Gesture triggered but no active portal exists.");
+            return;
+        }
 
-        // 2. Calculate distance between player and portal
         float distance = Vector3.Distance(playerTransform.position, activePortal.transform.position);
+        Debug.Log($"[PortalTeleporter] Distance to portal: {distance:F2}m (min required: {minDistanceToTeleport}m)");
 
-        // 3. Only teleport if the player is far enough away
         if (distance >= minDistanceToTeleport)
         {
+            Debug.Log("[PortalTeleporter] Starting teleport...");
             StartCoroutine(SmoothTeleport(activePortal.transform.position));
         }
         else
         {
-            Debug.Log("Too close to portal to teleport!");
+            Debug.Log($"[PortalTeleporter] Too close to portal! Move {minDistanceToTeleport - distance:F2}m further away.");
         }
     }
 
@@ -53,8 +63,8 @@ public class PortalTeleporter : MonoBehaviour
         }
 
         playerTransform.position = targetPosition;
+        Debug.Log($"[PortalTeleporter] Teleport complete. Player now at {targetPosition}");
 
-        // Clean up portal after successful move
         Destroy(activePortal);
         activePortal = null;
     }
