@@ -1843,6 +1843,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8970106232748975577, guid: fc71d63d22e006f4289d9411a8d4210c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 427929356}
+    - targetCorrespondingSourceObject: {fileID: 8970106232748975577, guid: fc71d63d22e006f4289d9411a8d4210c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 427929368}
   m_SourcePrefab: {fileID: 100100000, guid: fc71d63d22e006f4289d9411a8d4210c, type: 3}
 --- !u!1 &427929342 stripped
 GameObject:
@@ -1867,7 +1870,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 427929342}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ae4f2e9f70899b40bb9e323391b2f2a, type: 3}
   m_Name: 
@@ -1881,11 +1884,54 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 427929342}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4f86c2d98c0bc4418ce0bf9bf631477, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PortalTeleporter
+  playerTransform: {fileID: 1717651815}
+  transitionDuration: 0.5
+  minDistanceToTeleport: 1.5
+  easeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &427929368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 427929342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 100d6c63dfaf4d9ab045456f9bf16ba9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewPortalScript
+  portalPrefab: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1
   playerTransform: {fileID: 1717651815}
   transitionDuration: 0.5
   minDistanceToTeleport: 1.5
@@ -2296,12 +2342,48 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6955701965743552617, guid: d0131d912c772524caf91aa430c57393, type: 3}
+      propertyPath: _whenSelected.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6955701965743552617, guid: d0131d912c772524caf91aa430c57393, type: 3}
       propertyPath: _whenSelected.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 11500000, guid: b4f86c2d98c0bc4418ce0bf9bf631477, type: 3}
+      objectReference: {fileID: 427929368}
+    - target: {fileID: 6955701965743552617, guid: d0131d912c772524caf91aa430c57393, type: 3}
+      propertyPath: _whenSelected.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 427929356}
     - target: {fileID: 6955701965743552617, guid: d0131d912c772524caf91aa430c57393, type: 3}
       propertyPath: _whenSelected.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6955701965743552617, guid: d0131d912c772524caf91aa430c57393, type: 3}
+      propertyPath: _whenSelected.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6955701965743552617, guid: d0131d912c772524caf91aa430c57393, type: 3}
+      propertyPath: _whenSelected.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TeleportToPortal
+      objectReference: {fileID: 0}
+    - target: {fileID: 6955701965743552617, guid: d0131d912c772524caf91aa430c57393, type: 3}
+      propertyPath: _whenSelected.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnGestureComplete
+      objectReference: {fileID: 0}
+    - target: {fileID: 6955701965743552617, guid: d0131d912c772524caf91aa430c57393, type: 3}
+      propertyPath: _whenSelected.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: NewPortalScript, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6955701965743552617, guid: d0131d912c772524caf91aa430c57393, type: 3}
+      propertyPath: _whenSelected.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: PortalTeleporter, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6955701965743552617, guid: d0131d912c772524caf91aa430c57393, type: 3}
+      propertyPath: _whenSelected.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6955701965743552617, guid: d0131d912c772524caf91aa430c57393, type: 3}
+      propertyPath: _whenSelected.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8487934899251174099, guid: d0131d912c772524caf91aa430c57393, type: 3}
       propertyPath: m_Name

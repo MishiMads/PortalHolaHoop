@@ -11,6 +11,7 @@ TagManager:
   - Grabbable
   - Target
   - Floor
+  - Bouncable
   layers:
   - Default
   - TransparentFX
