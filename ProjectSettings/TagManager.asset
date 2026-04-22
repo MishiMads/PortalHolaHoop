@@ -24,6 +24,7 @@ TagManager:
   - QDSUIIcon
   - QDSUITextSecondaryColor
   - Ground
+  - Frisbee
   layers:
   - Default
   - TransparentFX

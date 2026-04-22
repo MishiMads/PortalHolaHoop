@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class NewPortalScript : MonoBehaviour
 {
+    public static event Action OnTeleportComplete;
     [Header("Portal Settings")]
     public GameObject portalPrefab;
     public LayerMask groundLayer;
@@ -12,6 +14,13 @@ public class NewPortalScript : MonoBehaviour
     public float transitionDuration = 0.5f;
     public float minDistanceToTeleport = 1.5f;
     public AnimationCurve easeCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
+    [Tooltip("Height added above ground after teleporting. Leave 0 for OVRCameraRig (it manages its own height).")]
+    public float playerHeightOffset = 0f;
+    [Tooltip("Raycast distance downward to snap to the ground surface at the destination.")]
+    public float groundCheckDistance = 5f;
+    [Tooltip("Assign CenterEyeAnchor (or the camera transform) so the rig offset is accounted for during teleport.")]
+    public Transform cameraTransform;
 
     private GameObject _activePortal;
     private bool _isTeleporting = false;
@@ -52,31 +61,42 @@ public class NewPortalScript : MonoBehaviour
     // Call this method from your OK gesture event in the Inspector
     public void TeleportToPortal()
     {
-        if (_isTeleporting)
-        {
-            Debug.Log("[NewPortalScript] Already teleporting.");
-            return;
-        }
-
-        if (_activePortal == null)
-        {
-            Debug.Log("[NewPortalScript] No active portal to teleport to.");
-            return;
-        }
-
-        if (playerTransform == null)
-        {
-            Debug.LogWarning("[NewPortalScript] Player Transform is not assigned!");
-            return;
-        }
+        if (_isTeleporting) { Debug.Log("[NewPortalScript] Already teleporting."); return; }
+        if (_activePortal == null) { Debug.Log("[NewPortalScript] No active portal to teleport to."); return; }
+        if (playerTransform == null) { Debug.LogWarning("[NewPortalScript] Player Transform is not assigned!"); return; }
 
         float distance = Vector3.Distance(playerTransform.position, _activePortal.transform.position);
         Debug.Log($"[NewPortalScript] Distance to portal: {distance:F2}m (min required: {minDistanceToTeleport}m)");
 
         if (distance >= minDistanceToTeleport)
         {
+            // Raycast downward from above the portal to find the exact ground surface
+            Vector3 portalPos = _activePortal.transform.position;
+            Vector3 rayOrigin = portalPos + Vector3.up * 2f;
+            Vector3 safeTarget = portalPos;
+
+            if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, groundCheckDistance + 2f, groundLayer))
+            {
+                safeTarget = hit.point + Vector3.up * playerHeightOffset;
+                Debug.Log($"[NewPortalScript] Ground found at {hit.point}, teleporting to {safeTarget}");
+            }
+            else
+            {
+                Debug.LogWarning("[NewPortalScript] No ground found below portal — using raw portal position.");
+            }
+
+            // Account for OVRCameraRig tracking offset so the rig moves
+            // to where the player's feet actually are, not where the headset is
+            if (cameraTransform != null)
+            {
+                Vector3 headOffset = cameraTransform.position - playerTransform.position;
+                headOffset.y = 0f; // only correct horizontal drift
+                safeTarget -= headOffset;
+                Debug.Log($"[NewPortalScript] Applied camera rig offset: {headOffset}");
+            }
+
             Debug.Log("[NewPortalScript] Starting teleport...");
-            StartCoroutine(SmoothTeleport(_activePortal.transform.position));
+            StartCoroutine(SmoothTeleport(safeTarget));
         }
         else
         {
@@ -100,6 +120,7 @@ public class NewPortalScript : MonoBehaviour
 
         playerTransform.position = targetPosition;
         Debug.Log($"[NewPortalScript] Teleport complete. Player now at {targetPosition}");
+        OnTeleportComplete?.Invoke();
 
         Destroy(_activePortal);
         _activePortal = null;

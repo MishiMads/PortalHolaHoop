@@ -9,11 +9,11 @@ public class FrisbeeSpawner : MonoBehaviour
     [SerializeField] private GameObject frisbee;
     [SerializeField] private float spawnDistance = 1.5f;
     [SerializeField] private float cooldownTime = 1f;
-    
+
     private IActiveState activeState;
     private bool previousGestureState = false;
     private float lastSpawnTime = -999f;
-    
+
     void Start()
     {
         if (gestureComponent == null)
@@ -24,7 +24,7 @@ public class FrisbeeSpawner : MonoBehaviour
 
         // Get the IActiveState interface from the component
         activeState = gestureComponent as IActiveState;
-        
+
         if (activeState == null)
         {
             Debug.LogError($"[FrisbeeSpawner] '{gestureComponent.GetType().Name}' does not implement IActiveState! Make sure you assigned a ShapeRecognizerActiveState, HandPoseActiveState, or similar.");
@@ -43,11 +43,11 @@ public class FrisbeeSpawner : MonoBehaviour
             Debug.Log($"[FrisbeeSpawner] Frisbee assigned: {frisbee.name}");
         }
     }
-    
+
     void Update()
     {
         if (activeState == null) return;
-        
+
         bool currentGestureState = activeState.Active;
 
         // Log when gesture state changes
@@ -55,7 +55,7 @@ public class FrisbeeSpawner : MonoBehaviour
         {
             Debug.Log($"[FrisbeeSpawner] Gesture state changed: {(currentGestureState ? "ACTIVE" : "INACTIVE")}");
         }
-        
+
         // Detect gesture activation with cooldown
         if (currentGestureState && !previousGestureState)
         {
@@ -70,10 +70,10 @@ public class FrisbeeSpawner : MonoBehaviour
                 Debug.Log($"[FrisbeeSpawner] Gesture detected but cooldown not ready. {(cooldownTime - timeSinceLastSpawn):F2}s remaining.");
             }
         }
-        
+
         previousGestureState = currentGestureState;
     }
-    
+
     private void SpawnFrisbee()
     {
         if (frisbee == null)
@@ -92,7 +92,17 @@ public class FrisbeeSpawner : MonoBehaviour
         Vector3 newPosition = cameraTransform.position + cameraTransform.forward * spawnDistance;
         frisbee.transform.position = newPosition;
         frisbee.transform.rotation = cameraTransform.rotation;
-        
+
+        // Freeze physics so the frisbee doesn't carry over any previous momentum
+        Rigidbody rb = frisbee.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+            Debug.Log("[FrisbeeSpawner] Frisbee physics frozen.");
+        }
+
         Debug.Log($"[FrisbeeSpawner] Frisbee repositioned to {newPosition}");
     }
 }
