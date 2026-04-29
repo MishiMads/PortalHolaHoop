@@ -6,13 +6,28 @@ public class FrisbeeSpawner : MonoBehaviour
 {
     // Reference to the active state (from HandPoseInputDevice or ShapeRecognizerActiveState)
     [SerializeField] private MonoBehaviour gestureComponent;
-    [SerializeField] private GameObject frisbee;
+
+    [Tooltip("Add both your Frisbee and PaperPlane GameObjects here. The one that is active in the scene will be used at runtime.")]
+    [SerializeField] private GameObject[] throwableObjects;
+
     [SerializeField] private float spawnDistance = 1.5f;
     [SerializeField] private float cooldownTime = 1f;
 
     private IActiveState activeState;
     private bool previousGestureState = false;
     private float lastSpawnTime = -999f;
+
+    /// <summary>Returns the first throwable object that is currently active in the hierarchy.</summary>
+    private GameObject ActiveThrowable
+    {
+        get
+        {
+            if (throwableObjects == null) return null;
+            foreach (var obj in throwableObjects)
+                if (obj != null && obj.activeInHierarchy) return obj;
+            return null;
+        }
+    }
 
     void Start()
     {
@@ -34,14 +49,11 @@ public class FrisbeeSpawner : MonoBehaviour
             Debug.Log($"[FrisbeeSpawner] Successfully linked gesture component: {gestureComponent.GetType().Name}");
         }
 
-        if (frisbee == null)
-        {
-            Debug.LogError("[FrisbeeSpawner] No frisbee GameObject assigned in the Inspector!");
-        }
+        var throwable = ActiveThrowable;
+        if (throwable == null)
+            Debug.LogWarning("[FrisbeeSpawner] No active throwable object found in ThrowableObjects list. Make sure at least one is active in the scene.");
         else
-        {
-            Debug.Log($"[FrisbeeSpawner] Frisbee assigned: {frisbee.name}");
-        }
+            Debug.Log($"[FrisbeeSpawner] Active throwable: {throwable.name}");
     }
 
     void Update()
@@ -76,9 +88,10 @@ public class FrisbeeSpawner : MonoBehaviour
 
     private void SpawnFrisbee()
     {
+        GameObject frisbee = ActiveThrowable;
         if (frisbee == null)
         {
-            Debug.LogError("[FrisbeeSpawner] Cannot reposition frisbee - reference is null!");
+            Debug.LogError("[FrisbeeSpawner] Cannot reposition throwable — no active object found in ThrowableObjects list!");
             return;
         }
 
